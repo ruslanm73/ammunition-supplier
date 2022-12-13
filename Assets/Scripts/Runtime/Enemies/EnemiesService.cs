@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Runtime.Enemies
 {
-    public class EnemiesController : MonoBehaviour
+    public class EnemiesService : MonoBehaviour
     {
         [SerializeField] private GameObject enemyPrefab;
         [SerializeField] private GameObject enemyPool;

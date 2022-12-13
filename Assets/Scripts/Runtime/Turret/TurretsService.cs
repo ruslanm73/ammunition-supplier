@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Runtime.Turret
 {
-    public class TurretsController : MonoBehaviour
+    public class TurretsService : MonoBehaviour
     {
         [SerializeField] private List<GameObject> turretsGameObjects;
     }

@@ -17,7 +17,7 @@ namespace Runtime.Core
 
         private void Awake()
         {
-            var screensManagerGameObject = GameObject.Find(GameConstants.ScreensManager);
+            var uiRoot = GameObject.Find(GameConstants.UIRoot);
             var ultimateJoystick = GameObject.Find(GameConstants.MainJoystick).GetComponent<UltimateJoystick>();
             var levelControllerGameObject = GameObject.Find(GameConstants.Level);
             var playerGameObject = GameObject.Find(GameConstants.Player);
@@ -25,15 +25,15 @@ namespace Runtime.Core
 
             DataGraph = GetComponent<DataGraph>();
             GameDataBase = new GameDataBase(DataGraph.gameData);
-            ScreensManager = FindObjectOfType<ScreensManager>();
-            LevelController levelController = levelControllerGameObject.GetComponent<LevelController>();
-            IPlayerMonoBehaviour playerMonoBehaviour = playerGameObject.GetComponent<PlayerMonoBehaviour>();
-            EnemiesController enemiesController = enemiesGameObject.GetComponent<EnemiesController>();
+            ScreensManager = uiRoot.GetComponent<IScreensManager>();
+            LevelService levelService = levelControllerGameObject.GetComponent<LevelService>();
+            PlayerMonoBehaviour playerMonoBehaviour = playerGameObject.GetComponent<PlayerMonoBehaviour>();
+            EnemiesService enemiesService = enemiesGameObject.GetComponent<EnemiesService>();
 
             GameDataBase.LoadData();
-            levelController.Inject();
+            levelService.Inject();
             playerMonoBehaviour.Inject(this, ultimateJoystick);
-            enemiesController.Inject();
+            enemiesService.Inject();
 
             ScreensManager.RegularScreen.UpdateMoneyCounter(DataGraph.gameData.money);
         }

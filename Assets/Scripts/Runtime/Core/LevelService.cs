@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Runtime.Core
 {
-    public class LevelController : MonoBehaviour
+    public class LevelService : MonoBehaviour
     {
         [SerializeField] private List<GameObject> ammunitionFactories;
         [SerializeField] private List<GameObject> turrets;

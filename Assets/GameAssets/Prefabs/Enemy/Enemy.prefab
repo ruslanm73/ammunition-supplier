@@ -46,10 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46c6129f7a2f70a449fd0078b9b53a60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  startHealth: 50
-  currentHealth: 0
-  lootGameObject: {fileID: 8706618644787575220, guid: e2a663353f1647245ae3c68d60607acd,
+  _target: {fileID: 0}
+  _startHealth: 50
+  _currentHealth: 0
+  _lootGameObject: {fileID: 8706618644787575220, guid: e2a663353f1647245ae3c68d60607acd,
     type: 3}
 --- !u!195 &9072293519436214831
 NavMeshAgent:

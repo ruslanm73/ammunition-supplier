@@ -6,27 +6,27 @@ namespace Runtime.Factories
 {
     public class AmmunitionFactory : MonoBehaviour
     {
-        [SerializeField] private float price;
-        [SerializeField] private bool purchased;
-        [SerializeField] private GameObject purchasePlace;
-        [SerializeField] private GameObject factoryModel;
-        [SerializeField] private Transform resourcesRootTransform;
-        [SerializeField] private Transform resourcesPlaces;
-        [SerializeField] private List<Transform> resourcesPlacesList;
-        [SerializeField] private List<GameObject> availableResources;
+        [SerializeField] private float _price;
+        [SerializeField] private bool _purchased;
+        [SerializeField] private GameObject _purchasePlace;
+        [SerializeField] private GameObject _factoryModel;
+        [SerializeField] private Transform _resourcesRootTransform;
+        [SerializeField] private Transform _resourcesPlaces;
+        [SerializeField] private List<Transform> _resourcesPlacesList;
+        [SerializeField] private List<GameObject> _availableResources;
 
-        [Header("Capacity")] [SerializeField] private int maxResourcesNumber;
+        [Header("Capacity")] [SerializeField] private int _maxResourcesNumber;
 
-        [Header("Resource")] [SerializeField] private GameObject resourcePrefab;
-        [SerializeField] private Vector3 resourcePositionOffset;
-        [SerializeField] private Vector3 resourceRotationOffset;
-        [SerializeField] private Vector3 resourceScaleOffset;
+        [Header("Resource")] [SerializeField] private GameObject _resourcePrefab;
+        [SerializeField] private Vector3 _resourcePositionOffset;
+        [SerializeField] private Vector3 _resourceRotationOffset;
+        [SerializeField] private Vector3 _resourceScaleOffset;
 
         [Header("Info")] private bool _productionStarted;
 
         public void Inject()
         {
-            if (purchased)
+            if (_purchased)
             {
                 ActivateFactory();
             }
@@ -34,17 +34,17 @@ namespace Runtime.Factories
 
         public void PurchaseFactory()
         {
-            purchased = true;
-            purchasePlace.SetActive(false);
-            factoryModel.SetActive(true);
+            _purchased = true;
+            _purchasePlace.SetActive(false);
+            _factoryModel.SetActive(true);
 
             ActivateFactory();
         }
 
         public void ActivateFactory()
         {
-            purchasePlace.SetActive(false);
-            factoryModel.SetActive(true);
+            _purchasePlace.SetActive(false);
+            _factoryModel.SetActive(true);
 
             InitialResourcesPlaces();
             StartProduction();
@@ -60,12 +60,12 @@ namespace Runtime.Factories
 
         private void InitialResourcesPlaces()
         {
-            for (var i = 0; i < resourcesPlaces.childCount; i++)
+            for (var i = 0; i < _resourcesPlaces.childCount; i++)
             {
-                resourcesPlacesList.Add(resourcesPlaces.GetChild(i));
+                _resourcesPlacesList.Add(_resourcesPlaces.GetChild(i));
             }
 
-            maxResourcesNumber = resourcesPlacesList.Count;
+            _maxResourcesNumber = _resourcesPlacesList.Count;
         }
 
         private void StartProduction()
@@ -77,8 +77,8 @@ namespace Runtime.Factories
 
         private void AddResource()
         {
-            var newResourceGameObject = Instantiate(resourcePrefab, resourcesRootTransform);
-            newResourceGameObject.transform.position = resourcesPlacesList[AvailableResources.Count].position;
+            var newResourceGameObject = Instantiate(_resourcePrefab, _resourcesRootTransform);
+            newResourceGameObject.transform.position = _resourcesPlacesList[AvailableResources.Count].position;
 
             AvailableResources.Add(newResourceGameObject);
         }
@@ -87,7 +87,7 @@ namespace Runtime.Factories
         {
             while (true)
             {
-                if (AvailableResources.Count < maxResourcesNumber)
+                if (AvailableResources.Count < _maxResourcesNumber)
                 {
                     AddResource();
                 }
@@ -96,12 +96,12 @@ namespace Runtime.Factories
             }
         }
 
-        public List<GameObject> AvailableResources => availableResources;
+        public List<GameObject> AvailableResources => _availableResources;
 
         public float Price
         {
-            get => price;
-            set => price = value;
+            get => _price;
+            set => _price = value;
         }
     }
 }

@@ -6,21 +6,21 @@ namespace Runtime.Turret
 {
     public class TurretMonoBehaviour : MonoBehaviour
     {
-        [SerializeField] private float turretPrice;
-        [SerializeField] private bool turretPurchased;
-        [SerializeField] private GameObject purchaseObject;
-        [SerializeField] private GameObject turretModel;
+        [SerializeField] private float _turretPrice;
+        [SerializeField] private bool _turretPurchased;
+        [SerializeField] private GameObject _purchaseObject;
+        [SerializeField] private GameObject _turretModel;
 
-        [Header("Shells")] [SerializeField] private int maxShellsNumbers;
-        [SerializeField] private int currentShellsNumber;
+        [Header("Shells")] [SerializeField] private int _maxShellsNumbers;
+        [SerializeField] private int _currentShellsNumber;
 
-        private EnemiesController _enemiesController;
+        private EnemiesService _enemiesService;
         private GameObject _targetGameObject;
         private IEnumerator _shootingEnumerator;
 
         public void Inject()
         {
-            if (turretPurchased)
+            if (_turretPurchased)
             {
                 ActivatedTurret();
             }
@@ -28,39 +28,39 @@ namespace Runtime.Turret
 
         public void PurchaseTurret()
         {
-            turretPurchased = true;
-            purchaseObject.SetActive(false);
-            turretModel.SetActive(true);
+            _turretPurchased = true;
+            _purchaseObject.SetActive(false);
+            _turretModel.SetActive(true);
             ActivatedTurret();
         }
 
         public void ActivatedTurret()
         {
-            purchaseObject.SetActive(false);
-            turretModel.SetActive(true);
+            _purchaseObject.SetActive(false);
+            _turretModel.SetActive(true);
 
-            _enemiesController = FindObjectOfType<EnemiesController>();
+            _enemiesService = FindObjectOfType<EnemiesService>();
             _shootingEnumerator = ShootingEnumerator();
             StartCoroutine(_shootingEnumerator);
         }
 
         public void AddShell()
         {
-            currentShellsNumber++;
+            _currentShellsNumber++;
         }
 
         public bool ShellsFillingAvailable()
         {
-            return currentShellsNumber < maxShellsNumbers;
+            return _currentShellsNumber < _maxShellsNumbers;
         }
 
         private void GetTarget()
         {
-            if (_targetGameObject == null && currentShellsNumber > 0 && turretPurchased)
+            if (_targetGameObject == null && _currentShellsNumber > 0 && _turretPurchased)
             {
-                for (var i = 0; i < _enemiesController.EnemiesGameObjects.Count; i++)
+                for (var i = 0; i < _enemiesService.EnemiesGameObjects.Count; i++)
                 {
-                    var currentEnemy = _enemiesController.EnemiesGameObjects[i];
+                    var currentEnemy = _enemiesService.EnemiesGameObjects[i];
                     var currentDistance = Vector3.Distance(transform.position, currentEnemy.transform.position);
 
                     if (currentDistance <= 7f)
@@ -73,7 +73,7 @@ namespace Runtime.Turret
 
         private void SetTargetRotation()
         {
-            if (_targetGameObject != null && currentShellsNumber > 0 && turretPurchased)
+            if (_targetGameObject != null && _currentShellsNumber > 0 && _turretPurchased)
             {
                 transform.rotation = Quaternion.LookRotation(_targetGameObject.transform.position - transform.position);
             }
@@ -83,11 +83,11 @@ namespace Runtime.Turret
         {
             while (true)
             {
-                if (_targetGameObject != null & currentShellsNumber > 0)
+                if (_targetGameObject != null & _currentShellsNumber > 0)
                 {
                     if (_targetGameObject.TryGetComponent(out EnemyMonoBehaviour enemyMonoBehaviour))
                     {
-                        currentShellsNumber--;
+                        _currentShellsNumber--;
 
                         enemyMonoBehaviour.TakeDamage(10f);
 
@@ -95,7 +95,7 @@ namespace Runtime.Turret
                         {
                             _targetGameObject = default;
 
-                            _enemiesController.EnemiesGameObjects.Remove(enemyMonoBehaviour.gameObject);
+                            _enemiesService.EnemiesGameObjects.Remove(enemyMonoBehaviour.gameObject);
                         }
                     }
                 }
@@ -112,14 +112,14 @@ namespace Runtime.Turret
 
         public int ShellsNumber
         {
-            get => currentShellsNumber;
-            set => currentShellsNumber = value;
+            get => _currentShellsNumber;
+            set => _currentShellsNumber = value;
         }
 
         public float TurretPrice
         {
-            get => turretPrice;
-            set => turretPrice = value;
+            get => _turretPrice;
+            set => _turretPrice = value;
         }
     }
 }

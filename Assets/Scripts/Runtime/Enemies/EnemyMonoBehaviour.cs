@@ -6,18 +6,18 @@ namespace Runtime.Enemies
 {
     public class EnemyMonoBehaviour : MonoBehaviour
     {
-        [SerializeField] private GameObject target;
-        [SerializeField] private float startHealth;
-        [SerializeField] private float currentHealth;
-        [SerializeField] private GameObject lootGameObject;
+        [SerializeField] private GameObject _target;
+        [SerializeField] private float _startHealth;
+        [SerializeField] private float _currentHealth;
+        [SerializeField] private GameObject _lootGameObject;
 
-        private EnemiesController _enemiesController;
+        private EnemiesService _enemiesService;
         private NavMeshAgent _navMeshAgent;
 
-        public void Inject(EnemiesController enemiesController)
+        public void Inject(EnemiesService enemiesService)
         {
-            _enemiesController = enemiesController;
-            target = GameObject.Find("Turret[1]");
+            _enemiesService = enemiesService;
+            _target = GameObject.Find("Turret[0]");
             _navMeshAgent = GetComponent<NavMeshAgent>();
 
             CurrentHealth = StartHealth;
@@ -25,9 +25,9 @@ namespace Runtime.Enemies
 
         private void FixedUpdate()
         {
-            if (target != null)
+            if (_target != null)
             {
-                _navMeshAgent.SetDestination(target.transform.position);
+                _navMeshAgent.SetDestination(_target.transform.position);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Runtime.Enemies
 
         private void DestroyEnemy()
         {
-            var newLootGameObject = Instantiate(lootGameObject);
+            var newLootGameObject = Instantiate(_lootGameObject);
             newLootGameObject.name = "LootMoney";
             newLootGameObject.transform.position = transform.position;
 
@@ -52,14 +52,14 @@ namespace Runtime.Enemies
 
         public float StartHealth
         {
-            get => startHealth;
-            set => startHealth = value;
+            get => _startHealth;
+            set => _startHealth = value;
         }
 
         public float CurrentHealth
         {
-            get => currentHealth;
-            set => currentHealth = value;
+            get => _currentHealth;
+            set => _currentHealth = value;
         }
     }
 }

@@ -19,14 +19,11 @@ namespace Runtime.Player.Components
     {
         private static readonly int PlayerCarrying = Animator.StringToHash("PlayerCarrying");
 
-        [SerializeField] private GameObject resourceTemplate;
-
-        public List<GameObject> currentArmfulResources;
-
-        [SerializeField] private Vector2 gridSize;
-        [SerializeField] private Vector2 gridSpace;
-        [SerializeField] private List<Vector2> gridPoints;
-
+        [SerializeField] private GameObject _resourceTemplate;
+        [SerializeField] private Vector2 _gridSize;
+        [SerializeField] private Vector2 _gridSpace;
+        [SerializeField] private List<Vector2> _gridPoints;
+        private readonly List<GameObject> _currentArmfulResources = new();
         private IPlayerReferences _playerReferences;
 
         public void Inject(IPlayerReferences playerReferences)
@@ -43,23 +40,23 @@ namespace Runtime.Player.Components
 
         public void AddResource()
         {
-            var newArmfulResource = Instantiate(resourceTemplate, _playerReferences.PlayerArmfulTransform);
-            newArmfulResource.transform.localPosition = new Vector3(0f, gridPoints[currentArmfulResources.Count].y, gridPoints[currentArmfulResources.Count].x);
+            var newArmfulResource = Instantiate(_resourceTemplate, _playerReferences.PlayerArmfulTransform);
+            newArmfulResource.transform.localPosition = new Vector3(0f, _gridPoints[_currentArmfulResources.Count].y, _gridPoints[_currentArmfulResources.Count].x);
             newArmfulResource.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
 
-            currentArmfulResources.Add(newArmfulResource);
+            _currentArmfulResources.Add(newArmfulResource);
 
             _playerReferences.PlayerAnimator.SetBool(PlayerCarrying, true);
         }
 
         public void RemoveResource()
         {
-            var targetResource = currentArmfulResources[^1];
+            var targetResource = _currentArmfulResources[^1];
             Destroy(targetResource);
 
-            currentArmfulResources.RemoveAt(currentArmfulResources.Count - 1);
+            _currentArmfulResources.RemoveAt(_currentArmfulResources.Count - 1);
 
-            if (currentArmfulResources.Count == default)
+            if (_currentArmfulResources.Count == default)
             {
                 _playerReferences.PlayerAnimator.SetBool(PlayerCarrying, false);
             }
@@ -67,30 +64,30 @@ namespace Runtime.Player.Components
 
         public void CreateArmfulGrid()
         {
-            if (gridPoints.Count != default) gridPoints.Clear();
+            if (_gridPoints.Count != default) _gridPoints.Clear();
 
-            for (var i = 0; i < gridSize.x; i++)
+            for (var i = 0; i < _gridSize.x; i++)
             {
-                for (var j = 0; j < gridSize.y; j++)
+                for (var j = 0; j < _gridSize.y; j++)
                 {
-                    var newPoint = new Vector2(i * gridSpace.x, j * gridSpace.y);
+                    var newPoint = new Vector2(i * _gridSpace.x, j * _gridSpace.y);
 
-                    gridPoints.Add(newPoint);
+                    _gridPoints.Add(newPoint);
                 }
             }
         }
 
         private void OnDrawGizmosSelected()
         {
-            for (var i = 0; i < gridPoints.Count; i++)
+            for (var i = 0; i < _gridPoints.Count; i++)
             {
                 Gizmos.color = Color.blue;
                 var localPosition = _playerReferences.PlayerArmfulTransform.localPosition;
-                Gizmos.DrawSphere(new Vector3(0f, localPosition.y + gridPoints[i].y, localPosition.z + gridPoints[i].x), 0.05f);
+                Gizmos.DrawSphere(new Vector3(0f, localPosition.y + _gridPoints[i].y, localPosition.z + _gridPoints[i].x), 0.05f);
             }
         }
 
         [field: SerializeField] public int TotalArmfulNumber { get; set; }
-        public List<GameObject> CurrentArmfulResources => currentArmfulResources;
+        public List<GameObject> CurrentArmfulResources => _currentArmfulResources;
     }
 }
